@@ -21,22 +21,12 @@ public class CustomerService {
         //return null; // это "заглушка, чтобы скомилировать"
         Map.Entry<Customer, String> entry = map.firstEntry();
         return entryEqualNull(entry);
-/*        if (Objects.isNull(entry)) {
-            return null;
-        }
-        Customer newCustomer = new Customer(entry.getKey().getId(), entry.getKey().getName(), entry.getKey().getScores());
-        return new AbstractMap.SimpleImmutableEntry<>(newCustomer, entry.getValue());*/
     }
 
     public Map.Entry<Customer, String> getNext(Customer customer) {
         //return null; // это "заглушка, чтобы скомилировать"
         Map.Entry<Customer, String> entry = map.higherEntry(customer);
         return entryEqualNull(entry);
-/*        if (Objects.isNull(entry)) {
-            return null;
-        }
-        Customer newCustomer = new Customer(entry.getKey().getId(), entry.getKey().getName(), entry.getKey().getScores());
-        return new AbstractMap.SimpleImmutableEntry<>(newCustomer, entry.getValue());*/
     }
 
     public void add(Customer customer, String data) {
