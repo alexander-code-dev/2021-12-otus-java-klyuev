@@ -24,11 +24,10 @@ public class AnnotationWorkExample {
                 + Integer.toHexString(hashCode()) + ", set num2: "+num2);
     }
     @Test
-    public void testFirst() throws Exception {
+    public void testFirst() {
         int sum = num1 + num2;
         System.out.println("First test annotation hashCode: "
                 + Integer.toHexString(hashCode()) + ", num1 + num2: " + sum);
-        //throw new Exception("No work");
     }
     @Test
     public void testSecond() {
