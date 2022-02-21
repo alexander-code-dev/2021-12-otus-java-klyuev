@@ -10,18 +10,19 @@ public class InvocationHandlerImpl implements InvocationHandler {
 
     private final Object object;
     private final Class<? extends Annotation> annotation;
+    private final List<MethodsForInvoke> methodsForInvoke;
 
     public InvocationHandlerImpl(Object object, Class<? extends Annotation> annotation) {
         this.object = object;
         this.annotation = annotation;
+        this.methodsForInvoke = getMethods(object, annotation);
     }
 
     @Override
     public Object invoke(Object proxy, Method method, Object... args)
             throws Throwable {
-        List<Method> methods = getArraysMethod(object, annotation);
-        methods.stream()
-                .filter(method1 -> method1.getName().equals(method.getName()) && method1.getParameters().length==args.length)
+        methodsForInvoke.stream()
+                .filter(method1 -> method1.getName().equals(method.getName()) && method1.getCountArg() == args.length)
                 .forEach(method2 -> System.out.println("executed method: " + method2.getName()
                         + ", param: " + getArgumentStr(args)));
         return method.invoke(object, args);
@@ -37,9 +38,11 @@ public class InvocationHandlerImpl implements InvocationHandler {
         }
         return argumentStr.toString();
     }
-    /* Массив методов по аннотации */
-    private List<Method> getArraysMethod(Object object, Class<? extends Annotation> cl) {
+    /* Массив имен методов с количеством параметров */
+    private List<MethodsForInvoke> getMethods(Object object, Class<? extends Annotation> cl) {
         return Arrays.stream(object.getClass().getMethods())
-                .filter(f -> f.isAnnotationPresent(cl)).toList();
+                .filter(f -> f.isAnnotationPresent(cl))
+                .map(method -> new MethodsForInvoke(method.getName(), method.getParameters().length))
+                .toList();
     }
 }
