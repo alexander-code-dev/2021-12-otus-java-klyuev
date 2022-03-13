@@ -4,16 +4,94 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.solid.Atm;
-import ru.solid.exception.AtmTakeCashException;
+import ru.solid.Cash;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class AtmImplTest {
 
     private Atm atm;
-    private Cash moneyIn1;
-    private Cash moneyIn2;
+
+    @BeforeEach
+    void init() {
+        this.atm = new AtmImpl();
+    }
+
+    @Test
+    @DisplayName("Прием купюр АТМ")
+    void giveCash() {
+        Cash cash1 = new CashImpl.СhooseBanknotes()
+                .cellCash(50, 4)
+                .cellCash(200, 5)
+                .set();
+        this.atm.giveCash(cash1);
+
+        assertThat(this.atm.getBalance()).isEqualTo(cash1.getSum());
+
+        Cash cash2 = new CashImpl.СhooseBanknotes()
+                .cellCash(50, 40)
+                .cellCash(200, 50)
+                .set();
+        this.atm.giveCash(cash2);
+
+
+        assertThat(this.atm.getBalance()).isEqualTo(cash1.getSum() + cash2.getSum());
+
+        Cash cashOut = this.atm.takeCash(cash1.getSum() + cash2.getSum());
+
+        assertThat(atm.getBalance()).isEqualTo(0);
+        assertThat(cashOut.getSum()).isEqualTo(cash1.getSum() + cash2.getSum());
+    }
+
+    @Test
+    @DisplayName("Запрос баланса в АТМ")
+    void getCashBalance() {
+        Cash cash1 = new CashImpl.СhooseBanknotes()
+                .cellCash(2000, 4)
+                .cellCash(50, 4)
+                .cellCash(200, 5)
+                .set();
+
+        assertThat(atm.getBalance()).isEqualTo(0);
+
+        atm.giveCash(cash1);
+
+        assertThat(atm.getBalance()).isEqualTo(cash1.getSum());
+
+        Cash cash2 = new CashImpl.СhooseBanknotes()
+                .cellCash(5, 40)
+                .cellCash(100, 14)
+                .cellCash(500, 7)
+                .cellCash(200, 3)
+                .set();
+
+        assertThat(atm.getBalance()).isEqualTo(cash1.getSum());
+
+        atm.giveCash(cash2);
+
+        assertThat(atm.getBalance()).isEqualTo(cash1.getSum() + cash2.getSum());
+    }
+
+    @Test
+    @DisplayName("Выдача суммы АТМ")
+    void takeCash() {
+        Cash cash = new CashImpl.СhooseBanknotes()
+                .cellCash(50, 40)
+                .cellCash(2000, 4)
+                .cellCash(10, 40000)
+                .cellCash(200, 50)
+                .set();
+        atm.giveCash(cash);
+
+        assertThat(cash.getSum()).isEqualTo(atm.getBalance());
+
+        int reqAnAmount = 42100;
+        atm.takeCash(reqAnAmount);
+
+        assertThat(atm.getBalance()).isEqualTo(cash.getSum() - reqAnAmount);
+    }
+
+    /*private Cash moneyIn2;
     private Cash moneyIn3;
 
     @BeforeEach
@@ -84,5 +162,5 @@ class AtmImplTest {
     void getCashBalance() {
         atm.giveCash(moneyIn3);
         assertThat(atm.getBalance()).isEqualTo(8865);
-    }
+    }*/
 }
