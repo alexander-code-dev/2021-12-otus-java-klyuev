@@ -9,6 +9,7 @@ import ru.otus.processor.Processor;
 import ru.otus.processor.ProcessorField11AndField12Swap;
 import ru.otus.processor.ProcessorThrowAnException;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class HomeWork {
          */
 
         List<Processor> processors = List.of(new LoggerProcessor(new ProcessorField11AndField12Swap()),
-                new LoggerProcessor(new ProcessorThrowAnException()));
+                new LoggerProcessor(new ProcessorThrowAnException(LocalDateTime::now)));
 
         ComplexProcessor complexProcessor = new ComplexProcessor(processors, ex -> {});
 

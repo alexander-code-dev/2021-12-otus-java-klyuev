@@ -176,7 +176,7 @@ public class Message {
             this.field13 = field13;
         }
 
-        public Builder message(Message msg) {
+        public Builder clone(Message msg) {
             this.field1 = msg.getField1();
             this.field2 = msg.getField2();
             this.field3 = msg.getField3();

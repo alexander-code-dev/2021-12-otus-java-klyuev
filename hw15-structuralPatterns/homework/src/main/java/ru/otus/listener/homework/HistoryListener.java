@@ -13,7 +13,7 @@ public class HistoryListener implements Listener, HistoryReader {
 
     @Override
     public void onUpdated(Message msg) {
-        this.message.put(msg.getId(), new Message.Builder(msg.getId()).message(msg).build());
+        this.message.put(msg.getId(), new Message.Builder(msg.getId()).clone(msg).build());
     }
 
     @Override
