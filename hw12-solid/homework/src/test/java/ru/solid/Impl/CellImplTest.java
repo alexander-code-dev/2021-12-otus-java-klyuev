@@ -2,7 +2,7 @@ package ru.solid.Impl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.solid.Sum;
+import ru.solid.SumMoney;
 import ru.solid.exception.AtmGiveCashException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -13,7 +13,7 @@ class CellImplTest {
     @Test
     @DisplayName("Проверка корректного вычисления суммы ячейки")
     void getSum() {
-        Sum sum = new CellImpl.CreateBanknotes()
+        SumMoney sum = new CellImpl.CreateBanknotes()
                 .putMoneySameDenomination(50,10)
                 .set();
         assertThat(sum.getSum()).isEqualTo(500);

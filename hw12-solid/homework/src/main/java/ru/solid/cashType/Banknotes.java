@@ -12,8 +12,6 @@ public enum Banknotes {
     TWO_THOUSAND(2000),
     FIFE_THOUSAND(5000);
 
-    private final int denomination;
-
     Banknotes(int denomination) {
         this.denomination = denomination;
     }
@@ -21,4 +19,6 @@ public enum Banknotes {
     public int getDenomination() {
         return denomination;
     }
+
+    private final int denomination;
 }

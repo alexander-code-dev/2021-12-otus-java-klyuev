@@ -12,15 +12,15 @@ public class AtmRunner {
         // запускаем АТМ
         Atm atm = new AtmImpl();
         // достаем разные купюры, собираем в пачку
-        Cash cash = new CashImpl.СhooseBanknotes()
+        Cash cash = new CashImpl.Banknotes()
                 .cellCash(2000, 4)
                 .cellCash(50, 4)
                 .cellCash(200, 5)
-                .set();
+                .build();
         // сумма пачки
         System.out.println("сумма пачки: "+cash.getSum());
         // кладем пачку в АТМ
-        atm.giveCash(cash);
+        atm.putCash(cash);
         // деньги в АТМ, проверяем баланс
         System.out.println("деньги в АТМ, проверяем баланс: "+atm.getBalance());
         // заберем деньги из АТМ

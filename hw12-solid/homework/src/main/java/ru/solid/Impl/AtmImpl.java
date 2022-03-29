@@ -51,40 +51,14 @@ public class AtmImpl implements Atm {
         } else {
             this.cells = this.AtmCellsMinusCellsForIssuance(atmCells, cellsForIssuance);
         }
-        return new CashImpl.СhooseBanknotes().cellsCash(cellsForIssuance).set();
+        return new CashImpl.Banknotes().cellsCash(cellsForIssuance).build();
     }
 
-    private List<Cell> AtmCellsMinusCellsForIssuance(List<Cell> atmCells, List<Cell> cellsForIssuance) {
-        for (int i = 0; atmCells.size() > i; i++) {
-            for (int j = 0; cellsForIssuance.size() > j; j++) {
-                if (atmCells.get(i).getDenomination() == cellsForIssuance.get(j).getDenomination()) {
-                    Cell cell = atmCells.get(i);
-                    cell.setCount(atmCells.get(i).getCount() - cellsForIssuance.get(j).getCount());
-                    atmCells.set(i, cell);
-                }
-            }
-        }
-        return atmCells;
-    }
-
-    private List<Cell> doCompareCells(List<Cell> cells) {
-        cells.sort(new Comparator<Cell>() {
-            @Override
-            public int compare(Cell o1, Cell o2) {
-                if (o1.getDenomination() == o2.getDenomination()) {
-                    return 0;
-                }
-                return o1.getDenomination() > o2.getDenomination() ? -1 : 1;
-            }
-        });
-        return cells;
-    }
-
-    public void giveCash(Cash cash) {
+    public void putCash(Cash cash) {
         List<Cell> tempSells = new ArrayList<>();
         List<Cell> comparedSells = new ArrayList<>();
         tempSells.addAll(this.cells);
-        tempSells.addAll(new CashImpl.СhooseBanknotes().cellsCash(cash.getCells()).set().getCells());
+        tempSells.addAll(new CashImpl.Banknotes().cellsCash(cash.getCells()).build().getCells());
         tempSells = this.doCompareCells(tempSells);
         int denomination = -1;
         for (int i = 0; i < tempSells.size(); i++) {
@@ -113,5 +87,31 @@ public class AtmImpl implements Atm {
         return "AtmImpl{" +
                 "cells=" + cells +
                 '}';
+    }
+
+    private List<Cell> AtmCellsMinusCellsForIssuance(List<Cell> atmCells, List<Cell> cellsForIssuance) {
+        for (int i = 0; atmCells.size() > i; i++) {
+            for (int j = 0; cellsForIssuance.size() > j; j++) {
+                if (atmCells.get(i).getDenomination() == cellsForIssuance.get(j).getDenomination()) {
+                    Cell cell = atmCells.get(i);
+                    cell.setCount(atmCells.get(i).getCount() - cellsForIssuance.get(j).getCount());
+                    atmCells.set(i, cell);
+                }
+            }
+        }
+        return atmCells;
+    }
+
+    private List<Cell> doCompareCells(List<Cell> cells) {
+        cells.sort(new Comparator<Cell>() {
+            @Override
+            public int compare(Cell o1, Cell o2) {
+                if (o1.getDenomination() == o2.getDenomination()) {
+                    return 0;
+                }
+                return o1.getDenomination() > o2.getDenomination() ? -1 : 1;
+            }
+        });
+        return cells;
     }
 }

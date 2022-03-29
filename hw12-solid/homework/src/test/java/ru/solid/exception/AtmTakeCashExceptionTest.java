@@ -24,11 +24,11 @@ class AtmTakeCashExceptionTest {
     @Test
     @DisplayName("Запрос выдачи из АТМ больше чем есть")
     void takeCashExceptionTestOne() {
-        Cash cash = new CashImpl.СhooseBanknotes()
+        Cash cash = new CashImpl.Banknotes()
                 .cellCash(50, 4)
                 .cellCash(200, 5)
-                .set();
-        this.atm.giveCash(cash);
+                .build();
+        this.atm.putCash(cash);
         Throwable exception = assertThrows(AtmTakeCashException.class,
                 () -> this.atm.takeCash(this.atm.getBalance() + 100));
         assertThat(exception.getMessage()).isEqualTo("Запрошенная сумма выше чем актуальный баланс");
@@ -37,11 +37,11 @@ class AtmTakeCashExceptionTest {
     @Test
     @DisplayName("Запрос выдачи из АТМ не каратной суммы")
     void takeCashExceptionTestTwo() {
-        Cash cash = new CashImpl.СhooseBanknotes()
+        Cash cash = new CashImpl.Banknotes()
                 .cellCash(50, 4)
                 .cellCash(200, 5)
-                .set();
-        this.atm.giveCash(cash);
+                .build();
+        this.atm.putCash(cash);
         Throwable exception = assertThrows(AtmTakeCashException.class,
                 () -> this.atm.takeCash(3));
         assertThat(exception.getMessage()).isEqualTo("Не кратная сумма для выдачи, минимальная купюра "
@@ -52,11 +52,11 @@ class AtmTakeCashExceptionTest {
     @Test
     @DisplayName("Запрос выдачи из АТМ суммы которая достаточна по балансу, но для которой не достаточно купюр")
     void takeCashExceptionTestThree() {
-        Cash cash = new CashImpl.СhooseBanknotes()
+        Cash cash = new CashImpl.Banknotes()
                 .cellCash(50, 4)
                 .cellCash(200, 5)
-                .set();
-        this.atm.giveCash(cash);
+                .build();
+        this.atm.putCash(cash);
         Throwable exception = assertThrows(AtmTakeCashException.class,
                 () -> this.atm.takeCash(655));
         assertThat(exception.getMessage()).isEqualTo("Для выдачи нужной суммы в АТМ не достаточно купюр малого номинала");

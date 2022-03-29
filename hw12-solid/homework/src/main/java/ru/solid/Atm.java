@@ -2,6 +2,6 @@ package ru.solid;
 
 public interface Atm {
     Cash takeCash(int reqAnAmount);
-    void giveCash(Cash cash);
+    void putCash(Cash cash);
     int getBalance();
 }

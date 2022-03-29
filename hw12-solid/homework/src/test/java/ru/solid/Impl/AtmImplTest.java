@@ -20,19 +20,19 @@ class AtmImplTest {
     @Test
     @DisplayName("Прием купюр АТМ")
     void giveCash() {
-        Cash cash1 = new CashImpl.СhooseBanknotes()
+        Cash cash1 = new CashImpl.Banknotes()
                 .cellCash(50, 4)
                 .cellCash(200, 5)
-                .set();
-        this.atm.giveCash(cash1);
+                .build();
+        this.atm.putCash(cash1);
 
         assertThat(this.atm.getBalance()).isEqualTo(cash1.getSum());
 
-        Cash cash2 = new CashImpl.СhooseBanknotes()
+        Cash cash2 = new CashImpl.Banknotes()
                 .cellCash(50, 40)
                 .cellCash(200, 50)
-                .set();
-        this.atm.giveCash(cash2);
+                .build();
+        this.atm.putCash(cash2);
 
 
         assertThat(this.atm.getBalance()).isEqualTo(cash1.getSum() + cash2.getSum());
@@ -46,28 +46,28 @@ class AtmImplTest {
     @Test
     @DisplayName("Запрос баланса в АТМ")
     void getCashBalance() {
-        Cash cash1 = new CashImpl.СhooseBanknotes()
+        Cash cash1 = new CashImpl.Banknotes()
                 .cellCash(2000, 4)
                 .cellCash(50, 4)
                 .cellCash(200, 5)
-                .set();
+                .build();
 
         assertThat(atm.getBalance()).isEqualTo(0);
 
-        atm.giveCash(cash1);
+        atm.putCash(cash1);
 
         assertThat(atm.getBalance()).isEqualTo(cash1.getSum());
 
-        Cash cash2 = new CashImpl.СhooseBanknotes()
+        Cash cash2 = new CashImpl.Banknotes()
                 .cellCash(5, 40)
                 .cellCash(100, 14)
                 .cellCash(500, 7)
                 .cellCash(200, 3)
-                .set();
+                .build();
 
         assertThat(atm.getBalance()).isEqualTo(cash1.getSum());
 
-        atm.giveCash(cash2);
+        atm.putCash(cash2);
 
         assertThat(atm.getBalance()).isEqualTo(cash1.getSum() + cash2.getSum());
     }
@@ -75,13 +75,13 @@ class AtmImplTest {
     @Test
     @DisplayName("Выдача суммы АТМ")
     void takeCash() {
-        Cash cash = new CashImpl.СhooseBanknotes()
+        Cash cash = new CashImpl.Banknotes()
                 .cellCash(50, 40)
                 .cellCash(2000, 4)
                 .cellCash(10, 40000)
                 .cellCash(200, 50)
-                .set();
-        atm.giveCash(cash);
+                .build();
+        atm.putCash(cash);
 
         assertThat(cash.getSum()).isEqualTo(atm.getBalance());
 

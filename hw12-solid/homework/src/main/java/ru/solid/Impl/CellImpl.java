@@ -15,26 +15,6 @@ public class CellImpl implements Cell {
         this.denomination = createBanknotes.denomination;
     }
 
-    public static class CreateBanknotes{
-
-        private int denomination;
-        private int count;
-
-        public CreateBanknotes putMoneySameDenomination(int denomination, int count) {
-            if (Arrays.stream(Banknotes.values()).noneMatch(f -> f.getDenomination() == denomination)) {
-                throw new AtmGiveCashException("Купюры номиналом: "+denomination+" не существует");
-            }
-            if (count == 0) {
-                System.out.println("Вы забыли вложить купюры для номинала: "+ denomination);
-            }
-            this.denomination = denomination;
-            this.count = count;
-            return this;
-        }
-        public CellImpl set() {
-            return new CellImpl(this);
-        }
-    }
     @Override
     public int getDenomination() {
         return this.denomination;
@@ -61,5 +41,26 @@ public class CellImpl implements Cell {
                 "denomination=" + this.denomination +
                 ", count=" + this.count +
                 '}';
+    }
+
+    public static class CreateBanknotes{
+
+        private int denomination;
+        private int count;
+
+        public CreateBanknotes putMoneySameDenomination(int denomination, int count) {
+            if (Arrays.stream(Banknotes.values()).noneMatch(f -> f.getDenomination() == denomination)) {
+                throw new AtmGiveCashException("Купюры номиналом: "+denomination+" не существует");
+            }
+            if (count == 0) {
+                System.out.println("Вы забыли вложить купюры для номинала: "+ denomination);
+            }
+            this.denomination = denomination;
+            this.count = count;
+            return this;
+        }
+        public CellImpl set() {
+            return new CellImpl(this);
+        }
     }
 }

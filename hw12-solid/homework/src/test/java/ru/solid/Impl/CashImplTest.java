@@ -13,13 +13,13 @@ class CashImplTest {
     void cashBuilderTest() {
         Cash money;
 
-        money = new CashImpl.СhooseBanknotes().set();
+        money = new CashImpl.Banknotes().build();
         assertThat(money.getSum()).isEqualTo(0);
 
-        money = new CashImpl.СhooseBanknotes().cellCash(50, 4).set();
+        money = new CashImpl.Banknotes().cellCash(50, 4).build();
         assertThat(money.getSum()).isEqualTo(200);
 
-        money = new CashImpl.СhooseBanknotes().cellCash(50, 4).cellCash(100, 4).set();
+        money = new CashImpl.Banknotes().cellCash(50, 4).cellCash(100, 4).build();
         assertThat(money.getSum()).isEqualTo(600);
     }
 }

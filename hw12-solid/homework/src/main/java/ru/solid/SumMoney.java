@@ -1,6 +1,6 @@
 package ru.solid;
 
 @FunctionalInterface
-public interface Sum {
+public interface SumMoney {
     int getSum();
 }
