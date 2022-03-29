@@ -135,6 +135,10 @@ public class Message {
                 '}';
     }
 
+    public Message clone() {
+        return new Message.Builder(this.id).clone(this).build();
+    }
+
     public static class Builder {
         private final long id;
         private String field1;
