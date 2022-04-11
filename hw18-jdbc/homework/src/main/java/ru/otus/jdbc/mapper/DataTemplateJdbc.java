@@ -78,14 +78,14 @@ public class DataTemplateJdbc<T> implements DataTemplate<T> {
     public List<Object> getObject(T client)
             throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         List<Field> fields = entityClassMetaData.getFieldsWithoutId();
-        log.debug("fields - "+fields);
+        log.debug("fields - {}", fields);
         List<Object> objects = new ArrayList<>();
-        log.debug("declared methods - " + Arrays.toString(client.getClass().getDeclaredMethods()));
+        log.debug("declared methods - {}", Arrays.toString(client.getClass().getDeclaredMethods()));
         for (Field field : fields) {
-            log.debug("invoke method - " + this.getMethodName(field.getName()));
+            log.debug("invoke method - {}", this.getMethodName(field.getName()));
             objects.add(client.getClass().getDeclaredMethod(this.getMethodName(field.getName())).invoke(client));
         }
-        log.debug("returned object for insert"+objects);
+        log.debug("returned object for insert {}", objects);
         return objects;
     }
 

@@ -13,8 +13,8 @@ import ru.otus.crm.service.DbServiceManagerImpl;
 import ru.otus.jdbc.mapper.DataTemplateJdbc;
 import ru.otus.jdbc.mapper.EntityClassMetaData;
 import ru.otus.jdbc.mapper.EntitySQLMetaData;
-import ru.otus.jdbc.mapper.Impl.EntityClassMetaDataImpl;
-import ru.otus.jdbc.mapper.Impl.EntitySQLMetaDataImpl;
+import ru.otus.jdbc.mapper.impl.EntityClassMetaDataImpl;
+import ru.otus.jdbc.mapper.impl.EntitySQLMetaDataImpl;
 
 import javax.sql.DataSource;
 

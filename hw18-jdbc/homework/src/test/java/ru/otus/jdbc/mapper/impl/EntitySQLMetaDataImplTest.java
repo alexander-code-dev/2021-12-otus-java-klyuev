@@ -1,4 +1,4 @@
-package ru.otus.jdbc.mapper.Impl;
+package ru.otus.jdbc.mapper.impl;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package ru.otus.jdbc.mapper.Impl;
+package ru.otus.jdbc.mapper.impl;
 
 import ru.otus.crm.model.Id;
 import ru.otus.jdbc.mapper.EntityClassMetaData;
@@ -77,8 +77,7 @@ public class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> {
                 .filter(f -> f.isAnnotationPresent(Id.class))
                 .findFirst();
         if (field.isEmpty()) {
-            System.out.println("annotation not found in class");
-            return null;
+            throw new RuntimeException("annotation not found in class");
         } else {
             return field.get();
         }
