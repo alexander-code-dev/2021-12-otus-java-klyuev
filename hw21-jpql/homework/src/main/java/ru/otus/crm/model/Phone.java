@@ -9,7 +9,8 @@ import javax.persistence.Entity;
 @Table(name = "phone")
 public class Phone {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PHONE_SEQ")
+    @SequenceGenerator(name = "PHONE_SEQ", sequenceName = "PHONE_ID_SEQ", allocationSize = 1)
     @Column(name = "id")
     private Long id;
     @Column(name = "number")

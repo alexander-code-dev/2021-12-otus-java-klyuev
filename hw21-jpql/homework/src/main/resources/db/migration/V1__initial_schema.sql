@@ -22,9 +22,14 @@ create table address
     street varchar(50),
     client_id bigint
 );
+CREATE SEQUENCE ADDRESS_ID_SEQ;
+ALTER TABLE ADDRESS ALTER COLUMN id SET DEFAULT nextval('ADDRESS_ID_SEQ');
+
 create table phone
 (
     id   bigint not null primary key,
     number varchar(50),
     client_id bigint
 );
+CREATE SEQUENCE PHONE_ID_SEQ;
+ALTER TABLE PHONE ALTER COLUMN id SET DEFAULT nextval('PHONE_ID_SEQ');
