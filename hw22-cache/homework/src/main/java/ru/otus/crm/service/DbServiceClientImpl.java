@@ -39,14 +39,14 @@ public class DbServiceClientImpl implements DBServiceClient {
                 clientDataTemplate.insert(session, clientCloned);
                 log.info("created client: {}", clientCloned);
 
-                cache.put(this.longToNewString(clientCloned.getId()), clientCloned);
+                cache.put(this.getCacheKey(clientCloned.getId()), clientCloned);
 
                 return clientCloned;
             }
             clientDataTemplate.update(session, clientCloned);
             log.info("updated client: {}", clientCloned);
 
-            cache.put(this.longToNewString(clientCloned.getId()), clientCloned);
+            cache.put(this.getCacheKey(clientCloned.getId()), clientCloned);
 
             return clientCloned;
         });
@@ -59,7 +59,7 @@ public class DbServiceClientImpl implements DBServiceClient {
         }
         return transactionManager.doInReadOnlyTransaction(session -> {
             var clientOptional = clientDataTemplate.findById(session, id);
-            clientOptional.ifPresent(client -> cache.put(this.longToNewString(id), client));
+            clientOptional.ifPresent(client -> cache.put(this.getCacheKey(id), client));
             log.info("client: {}", clientOptional);
             return clientOptional;
         });
@@ -74,7 +74,7 @@ public class DbServiceClientImpl implements DBServiceClient {
        });
     }
 
-    private String longToNewString(Long id) {
+    private String getCacheKey(Long id) {
         return new String(id.toString());
     }
 }
