@@ -3,16 +3,16 @@ package ru.otus.web.servlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.hibernate.SessionFactory;
-import ru.otus.core.repository.DataTemplateHibernate;
-import ru.otus.core.sessionmanager.TransactionManagerHibernate;
+import ru.otus.crm.model.Address;
 import ru.otus.crm.model.Client;
-import ru.otus.crm.service.DbServiceClientImpl;
+import ru.otus.crm.model.Phone;
+import ru.otus.crm.service.DBServiceClient;
 import ru.otus.web.services.TemplateProcessor;
 
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AddClientServlet extends HttpServlet {
@@ -20,11 +20,11 @@ public class AddClientServlet extends HttpServlet {
     private static final String TEMPLATE_ATTR_ADD_CLIENT = "addClient";
 
     private final TemplateProcessor templateProcessor;
-    private final SessionFactory sessionFactory;
+    private final DBServiceClient dbServiceClient;
 
-    public AddClientServlet(TemplateProcessor templateProcessor, SessionFactory sessionFactory) {
+    public AddClientServlet(TemplateProcessor templateProcessor, DBServiceClient dbServiceClient) {
         this.templateProcessor = templateProcessor;
-        this.sessionFactory = sessionFactory;
+        this.dbServiceClient = dbServiceClient;
     }
 
     @Override
@@ -34,11 +34,9 @@ public class AddClientServlet extends HttpServlet {
             parameters.put(parameter, req.getParameter(parameter));
         }
 
-        var transactionManager = new TransactionManagerHibernate(sessionFactory);
-        var clientTemplate = new DataTemplateHibernate<>(Client.class);
-        var dbServiceClient = new DbServiceClientImpl(transactionManager, clientTemplate);
-
-        dbServiceClient.saveClient(new Client(null, parameters.get("name")));
+        Phone phone = new Phone(null, parameters.get("phone"));
+        Address address = new Address(null, parameters.get("address"));
+        dbServiceClient.saveClient(new Client(null, parameters.get("name"), address, List.of(phone)));
         response.sendRedirect(TEMPLATE_ATTR_ADD_CLIENT);
     }
     @Override

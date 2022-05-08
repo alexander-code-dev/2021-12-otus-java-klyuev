@@ -1,12 +1,18 @@
-package ru.otus.web;
+package ru.otus;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import ru.otus.core.repository.DataTemplate;
+import ru.otus.core.repository.DataTemplateHibernate;
 import ru.otus.core.repository.HibernateUtils;
+import ru.otus.core.sessionmanager.TransactionManager;
+import ru.otus.core.sessionmanager.TransactionManagerHibernate;
 import ru.otus.crm.dbmigrations.MigrationsExecutorFlyway;
 import ru.otus.crm.model.Address;
 import ru.otus.crm.model.Client;
 import ru.otus.crm.model.Phone;
+import ru.otus.crm.service.DBServiceClient;
+import ru.otus.crm.service.DbServiceClientImpl;
 import ru.otus.web.server.ClientWebServer;
 import ru.otus.web.server.ClientWebServerWithFilterBasedSecurity;
 import ru.otus.web.services.TemplateProcessor;
@@ -29,6 +35,10 @@ public class WebServer {
         new MigrationsExecutorFlyway(dbUrl, dbUserName, dbPassword).executeMigrations();
         SessionFactory sessionFactory = HibernateUtils.buildSessionFactory(configuration,
                 Client.class, Phone.class, Address.class);
+        TransactionManager transactionManager = new TransactionManagerHibernate(sessionFactory);
+        DataTemplate<Client> clientTemplate = new DataTemplateHibernate<>(Client.class);
+        DBServiceClient dbServiceClient = new DbServiceClientImpl(transactionManager, clientTemplate);
+
         // web server
         TemplateProcessor templateProcessor = new TemplateProcessorImpl(TEMPLATES_DIR);
         UserAuthService authService = new UserAuthServiceImpl();
@@ -36,7 +46,7 @@ public class WebServer {
                 WEB_SERVER_PORT,
                 authService,
                 templateProcessor,
-                sessionFactory);
+                dbServiceClient);
         clientWebServer.start();
         clientWebServer.join();
     }

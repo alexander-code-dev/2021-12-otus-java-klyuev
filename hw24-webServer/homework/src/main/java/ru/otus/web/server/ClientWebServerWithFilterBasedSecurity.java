@@ -4,7 +4,7 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.hibernate.SessionFactory;
+import ru.otus.crm.service.DBServiceClient;
 import ru.otus.web.services.TemplateProcessor;
 import ru.otus.web.services.UserAuthService;
 import ru.otus.web.servlet.AuthorizationFilter;
@@ -18,8 +18,8 @@ public class ClientWebServerWithFilterBasedSecurity extends ClientWebServerSimpl
     public ClientWebServerWithFilterBasedSecurity(int port,
                                                   UserAuthService authService,
                                                   TemplateProcessor templateProcessor,
-                                                  SessionFactory sessionFactory) {
-        super(port, templateProcessor, sessionFactory);
+                                                  DBServiceClient dbServiceClient) {
+        super(port, templateProcessor, dbServiceClient);
         this.authService = authService;
     }
 

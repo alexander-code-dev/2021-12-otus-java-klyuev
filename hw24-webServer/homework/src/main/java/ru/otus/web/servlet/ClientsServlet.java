@@ -3,11 +3,7 @@ package ru.otus.web.servlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.hibernate.SessionFactory;
-import ru.otus.core.repository.DataTemplateHibernate;
-import ru.otus.core.sessionmanager.TransactionManagerHibernate;
-import ru.otus.crm.model.Client;
-import ru.otus.crm.service.DbServiceClientImpl;
+import ru.otus.crm.service.DBServiceClient;
 import ru.otus.web.services.TemplateProcessor;
 
 import java.io.IOException;
@@ -21,24 +17,21 @@ public class ClientsServlet extends HttpServlet {
     private static final String TEMPLATE_ATTR_CLIENT = "clients";
 
     private final TemplateProcessor templateProcessor;
-    private final SessionFactory sessionFactory;
+    private final DBServiceClient dbServiceClient;
 
-    public ClientsServlet(TemplateProcessor templateProcessor, SessionFactory sessionFactory) {
+    public ClientsServlet(TemplateProcessor templateProcessor,
+                          DBServiceClient dbServiceClient) {
         this.templateProcessor = templateProcessor;
-        this.sessionFactory = sessionFactory;
+        this.dbServiceClient = dbServiceClient;
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse response) throws IOException {
-
         Map<String, Object> paramsMap = new HashMap<>();
 
-        var transactionManager = new TransactionManagerHibernate(sessionFactory);
-        var clientTemplate = new DataTemplateHibernate<>(Client.class);
-        var dbServiceClient = new DbServiceClientImpl(transactionManager, clientTemplate);
+        System.out.println(dbServiceClient.findAll());
 
         paramsMap.put(TEMPLATE_ATTR_CLIENT, dbServiceClient.findAll());
-
         response.setContentType("text/html");
         response.getWriter().println(templateProcessor.getPage(CLIENTS_PAGE_TEMPLATE, paramsMap));
     }

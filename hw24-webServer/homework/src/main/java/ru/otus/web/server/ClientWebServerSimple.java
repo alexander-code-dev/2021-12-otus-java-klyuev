@@ -6,7 +6,7 @@ import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.hibernate.SessionFactory;
+import ru.otus.crm.service.DBServiceClient;
 import ru.otus.web.helpers.FileSystemHelper;
 import ru.otus.web.services.TemplateProcessor;
 import ru.otus.web.servlet.AddClientServlet;
@@ -19,12 +19,12 @@ public class ClientWebServerSimple implements ClientWebServer {
 
     protected final TemplateProcessor templateProcessor;
     private final Server server;
-    private final SessionFactory sessionFactory;
+    private final DBServiceClient dbServiceClient;
 
-    public ClientWebServerSimple(int port, TemplateProcessor templateProcessor, SessionFactory sessionFactory) {
+    public ClientWebServerSimple(int port, TemplateProcessor templateProcessor, DBServiceClient dbServiceClient) {
         this.templateProcessor = templateProcessor;
         server = new Server(port);
-        this.sessionFactory = sessionFactory;
+        this.dbServiceClient = dbServiceClient;
     }
 
     @Override
@@ -72,8 +72,8 @@ public class ClientWebServerSimple implements ClientWebServer {
 
     private ServletContextHandler createServletContextHandler() {
         ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        servletContextHandler.addServlet(new ServletHolder(new ClientsServlet(templateProcessor, sessionFactory)), "/clients");
-        servletContextHandler.addServlet(new ServletHolder(new AddClientServlet(templateProcessor, sessionFactory)), "/addClient");
+        servletContextHandler.addServlet(new ServletHolder(new ClientsServlet(templateProcessor, dbServiceClient)), "/clients");
+        servletContextHandler.addServlet(new ServletHolder(new AddClientServlet(templateProcessor, dbServiceClient)), "/addClient");
         return servletContextHandler;
     }
 }
