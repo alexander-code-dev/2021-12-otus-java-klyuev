@@ -1,13 +1,13 @@
 package ru.otus;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import ru.otus.appcontainer.AppComponentsContainerImpl;
-import ru.otus.appcontainer.api.AppComponentsContainer;
 import ru.otus.config.AppConfig;
-import ru.otus.services.*;
+import ru.otus.services.EquationPreparer;
+import ru.otus.services.IOService;
+import ru.otus.services.PlayerService;
 
 import java.io.PrintStream;
 import java.lang.reflect.Modifier;

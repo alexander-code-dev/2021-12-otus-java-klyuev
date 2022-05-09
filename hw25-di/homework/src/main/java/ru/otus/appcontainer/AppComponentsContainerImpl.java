@@ -1,7 +1,5 @@
 package ru.otus.appcontainer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.otus.appcontainer.api.AppComponent;
 import ru.otus.appcontainer.api.AppComponentsContainer;
 import ru.otus.appcontainer.api.AppComponentsContainerConfig;
@@ -14,56 +12,58 @@ import java.util.stream.Stream;
 
 public class AppComponentsContainerImpl implements AppComponentsContainer {
 
-    private static final Logger log = LoggerFactory.getLogger(AppComponentsContainerImpl.class);
     private final List<Object> appComponents = new ArrayList<>();
     private final Map<String, Object> appComponentsByName = new HashMap<>();
 
     public AppComponentsContainerImpl(Class<?> initialConfigClass) {
-        processConfig(initialConfigClass);
+        this.processConfig(initialConfigClass);
     }
 
     private void processConfig(Class<?> configClass) {
-        checkConfigClass(configClass);
-        Object instanceConfigClass;
+        this.checkConfigClass(configClass);
+        Object instanceConfigClass = this.getInstanceConfigClass(configClass);
+        List<Method> methods = this.getSortedDeclaredMethods(configClass);
+        this.executionMethodsInstanceConfigClass(instanceConfigClass, methods);
+    }
+
+    private Object getInstanceConfigClass(Class<?> configClass) {
         try {
-            instanceConfigClass = configClass.getDeclaredConstructor().newInstance();
+            return configClass.getDeclaredConstructor().newInstance();
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException(String.format("Unable to instantiate class %s", configClass.getSimpleName()));
+            throw new RuntimeException(String.format("Unable to instantiate class %s ", configClass.getSimpleName()), e);
         }
-        // сортировка
-        List<Method> methods = Stream.of(configClass.getDeclaredMethods())
+    }
+
+    private List<Method> getSortedDeclaredMethods(Class<?> configClass) {
+        return Stream.of(configClass.getDeclaredMethods())
                 .sorted(Comparator.comparingInt(o -> o.getAnnotation(AppComponent.class).order()))
                 .toList();
-        // выполнение методов
+    }
+
+    private void executionMethodsInstanceConfigClass(Object instanceConfigClass, List<Method> methods) {
         for (Method method:methods) {
             try {
-                Object invokeObject;
-                if (method.getParameters().length != 0) {
-                    invokeObject = method.invoke(instanceConfigClass,
-                            this.getAppComponentFromTheList(List.of(method.getParameters())));
+                Object invokeObject = method.invoke(
+                        instanceConfigClass,
+                        this.getComponentsForMethodExecutionFromParameters(List.of(method.getParameters())));
+                String componentName = method.getAnnotation(AppComponent.class).name();
+                if (appComponentsByName.get(componentName) == null) {
+                    appComponentsByName.put(componentName, invokeObject);
+                    appComponents.add(invokeObject);
                 }
-                else {
-                    invokeObject = method.invoke(instanceConfigClass);
-                }
-                // заполняем коллекции
-                appComponentsByName.put(method.getAnnotation(AppComponent.class).name(), invokeObject);
-                appComponents.add(invokeObject);
             } catch (IllegalAccessException | InvocationTargetException e) {
-                throw new RuntimeException(String.format("Failed to execute method %s on class %s",
-                        method.getName(),
-                        configClass.getSimpleName()));
+                throw new RuntimeException(String.format("Failed to execute method %s ", method.getName()), e);
             }
         }
     }
 
     private void checkConfigClass(Class<?> configClass) {
         if (!configClass.isAnnotationPresent(AppComponentsContainerConfig.class)) {
-            throw new IllegalArgumentException(String.format("Given class is not config %s", configClass.getName()));
+            throw new IllegalArgumentException(String.format("Given class is not config %s ", configClass.getName()));
         }
     }
 
-    // помощник, его задача отдать простой массив с компонентами для подстановки в параметры метода согласно их порядку
-    private Object[] getAppComponentFromTheList(List<Parameter> parameters) {
+    private Object[] getComponentsForMethodExecutionFromParameters(List<Parameter> parameters) {
         Object[] arrComponent = new Object[parameters.size()];
         for (int i = 0; i < parameters.size(); i++) {
             arrComponent[i] = this.getAppComponent(parameters.get(i).getType());
@@ -74,26 +74,15 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
     @Override
     public <C> C getAppComponent(Class<C> componentClass) {
         for (Object component:appComponents) {
-            // параметром приехал интерфейс, отдаем первый компонент который его реализует
-            if (componentClass.isInterface()) {
-                for (Class<?> interfaze:List.of(component.getClass().getInterfaces())) {
-                    if (interfaze.getSimpleName().equals(componentClass.getSimpleName())) {
-                        return (C) component;
-                    }
-                }
-            }
-            // параметром приехал класс, отдаем компонент по реализующему классу
-            else if (componentClass.getSimpleName().equals(component.getClass().getSimpleName())) {
+            if (componentClass.isAssignableFrom(component.getClass())) {
                 return (C) component;
             }
         }
-        log.warn("component not found for {}", componentClass.getSimpleName());
-        return null;
+        throw new RuntimeException("Component not found for "+componentClass.getSimpleName());
     }
 
     @Override
     public <C> C getAppComponent(String componentName) {
-        // отдаем компонент по имени
         return (C) appComponentsByName.get(componentName);
     }
 }
