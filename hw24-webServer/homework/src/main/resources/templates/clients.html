@@ -1,0 +1,62 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>view all clients</title>
+</head>
+
+<body>
+<h3>Clients list</h3>
+<a href="index.html">Home</a><br/>
+<a href="addClient">Create and put client to database</a>
+<br><br>
+<div>
+    <style>
+        table.tb { width:300px; border-collapse: collapse; }
+        .tb th, .tb td { border: solid 1px #777; padding: 5px; }
+        .tb thead { background-color:lightblue; }
+        ul {
+            width: 150px;
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+        }
+    </style>
+    <table class="tb">
+        <thead>
+        <tr>
+            <td style="width: 50px">Id</td>
+            <td style="width: 150px">Name</td>
+            <td style="width: 150px">Street</td>
+            <td style="width: 150px">Number</td>
+        </tr>
+        </thead>
+        <#list clients as client>
+        <tr>
+            <td>${client.id}</td>
+            <#if client.name?has_content>
+                <td>${client.name}</td>
+            <#else>
+                <td>undefined name</td>
+            </#if>
+            <#if client.address.street?has_content>
+                <td>${client.address.street}</td>
+            <#else>
+                <td>undefined address</td>
+            </#if>
+            <td>
+                <ul>
+                    <#list client.phones as phone>
+                    <#if phone.number?has_content>
+                    <li>${phone.number}</li>
+                    <#else>
+                    <li>undefined number</li>
+                </#if>
+            </#list>
+            </ul>
+            </td>
+        </tr>
+        </#list>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

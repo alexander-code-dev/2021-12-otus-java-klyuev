@@ -1,0 +1,29 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>create and put client to database</title>
+</head>
+
+<body>
+<h3>Create and put client to database</h3>
+<a href="index.html">Home</a><br/>
+<a href="clients">View all clients</a>
+<br><br>
+<div>
+    <form action="addClient" name="addClient" method="POST">
+        <style>
+            .edit {
+                border: 1px solid black;
+                border-radius: 5px;
+            }
+        </style>
+        <div>Name:</div>
+        <input class="edit" type="text" name="name"><br/>
+        <div>Address:</div>
+        <input class="edit" type="text" name="address"><br/>
+        <div>Phone:</div>
+        <input class="edit" type="text" name="phone"><br/>
+        <input class="edit" type="submit" value="submit"/>
+    </form>
+</div>
+</body>
+</html>
