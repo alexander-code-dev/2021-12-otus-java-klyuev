@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Add client</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}"/>
+</head>
+<body>
+    <h1>Create a client:</h1>
+    <a href="clients">View clients</a>
+    <form th:action="@{/addClient}" th:object="${clientForm}" method="POST">
+        <div>Name:</div>
+        <input required class="edit" type="text" th:field="*{name} " /><br/>
+        <div>Address:</div>
+        <input class="edit" type="text" th:field="*{address}" /><br/>
+        <div>Phone:</div>
+        <input class="edit" type="text" th:field="*{phone}" /><br/>
+        <input class="edit" type="submit" value="Create" />
+    </form>
+</body>
+</html>

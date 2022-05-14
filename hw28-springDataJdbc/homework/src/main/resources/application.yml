@@ -1,0 +1,10 @@
+spring:
+  main:
+    banner-mode: off
+  datasource:
+    url: jdbc:postgresql://localhost:5430/demoDB?currentSchema=public
+    username: usr
+    password: pwd
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: true
