@@ -37,6 +37,8 @@ allprojects {
 
             dependency("org.testcontainers:junit-jupiter:${Versions.testcontainers}")
             dependency("org.testcontainers:postgresql:${Versions.testcontainers}")
+
+            dependency("com.google.code.findbugs:jsr305:${Versions.jsr305}")
         }
     }
 

@@ -1,0 +1,20 @@
+TRUNCATE TABLE PHONE;
+ALTER SEQUENCE PHONE_ID_SEQ RESTART WITH 1;
+
+TRUNCATE TABLE ADDRESS;
+ALTER SEQUENCE ADDRESS_ID_SEQ RESTART WITH 1;
+
+SET FOREIGN_KEY_CHECKS=0;
+TRUNCATE TABLE CLIENT;
+SET FOREIGN_KEY_CHECKS=1;
+ALTER SEQUENCE CLIENT_ID_SEQ RESTART WITH 1;
+
+INSERT INTO CLIENT (name) values ('Александр');
+INSERT INTO CLIENT (name) values ('Владимир');
+
+INSERT INTO ADDRESS (street, client_id) values ('Lenina', 1);
+INSERT INTO ADDRESS (street, client_id) values ('Rumjana', 2);
+
+INSERT INTO PHONE (number, client_id) values ('555-13-22', 1);
+INSERT INTO PHONE (number, client_id) values ('8-333-986-78-87', 1);
+INSERT INTO PHONE (number, client_id) values ('8-222-888-98-15', 2);
