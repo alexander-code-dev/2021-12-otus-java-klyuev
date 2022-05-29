@@ -22,7 +22,8 @@ public class SensorDataProcessorBuffered implements SensorDataProcessor {
     }
 
     @Override
-    public void process(SensorData data) {
+    public synchronized void process(SensorData data) {
+        Thread.yield();
         if (!queue.offer(data)) {
             flush();
             queue.add(data);
@@ -31,8 +32,10 @@ public class SensorDataProcessorBuffered implements SensorDataProcessor {
 
     public synchronized void flush() {
         try {
-            if (queue.size() != 0) {
-                writer.writeBufferedData(queue.stream().sorted(Comparator.comparing(SensorData::getMeasurementTime)).toList());
+            if (!queue.isEmpty()) {
+                writer.writeBufferedData(queue.stream()
+                        .sorted(Comparator.comparing(SensorData::getMeasurementTime))
+                        .toList());
                 queue.clear();
             }
         } catch (Exception e) {
