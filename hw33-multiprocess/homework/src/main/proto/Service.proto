@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package ru.otus.generated;
+
+option java_multiple_files = true;
+
+message ClientReq {
+  int32 firstValue = 1;
+  int32 lastValue = 2;
+}
+
+message ServerRes {
+  int32 generatedValue = 1;
+}
+
+service CalculatedValueService {
+  rpc streamingGetValues(ClientReq) returns (stream ServerRes);
+}
