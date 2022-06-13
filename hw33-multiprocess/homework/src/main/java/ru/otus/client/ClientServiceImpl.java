@@ -31,7 +31,7 @@ public class ClientServiceImpl {
         return new StreamObserver<>() {
             @Override
             public void onNext(ServerRes value) {
-                generatedValue = value.getGeneratedValue();
+                setGeneratedValue(value.getGeneratedValue());
                 logger.info("new value: {}", generatedValue);
             }
 
@@ -54,5 +54,9 @@ public class ClientServiceImpl {
 
     public int getGeneratedValue() {
         return generatedValue;
+    }
+
+    public synchronized void setGeneratedValue(int generatedValue) {
+        this.generatedValue = generatedValue;
     }
 }
